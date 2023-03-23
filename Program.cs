@@ -7,11 +7,14 @@ string path = Directory.GetCurrentDirectory() + "\\nlog.config";
 var logger = LogManager.LoadConfiguration(path).GetCurrentClassLogger();
 string ticketFilePath = Directory.GetCurrentDirectory() + "\\Tickets.csv";
 string enhanceFilePath = Directory.GetCurrentDirectory() + "\\Enhancements.csv";
+string taskFilePath = Directory.GetCurrentDirectory() + "\\Task.csv";
 
 logger.Info("Program started");
 
 TicketFile ticketFile = new TicketFile(ticketFilePath);
 EnhanceFile enhanceFile = new EnhanceFile(enhanceFilePath);
+TaskFile taskFile = new TaskFile(taskFilePath);
+
 
 string choice = "";
 do
@@ -21,6 +24,8 @@ do
   Console.WriteLine("2) Display All Tickets");
   Console.WriteLine("3) Add Enchancement");
   Console.WriteLine("4) Display All Enhancements");
+  Console.WriteLine("5) Add Task");
+  Console.WriteLine("6) Display All Task");
   Console.WriteLine("Enter to quit");
   // input selection
   choice = Console.ReadLine();
@@ -149,6 +154,66 @@ do
       Console.WriteLine(e.Display());
     }
   }
-} while (choice == "1" || choice == "2" || choice == "3" || choice == "4");
+  else if (choice == "5")
+  {
+    Task task = new Task();
+    // ask user to input ticket summary
+    Console.WriteLine("Enter task summary");
+    // input summary
+    task.Summary = Console.ReadLine();
+    // ask user to input ticket status
+    Console.WriteLine("Enter task status");
+    // input status
+    task.Status = Console.ReadLine();
+    // ask user to input ticket priority
+    Console.WriteLine("Enter task priotity");
+    // input priority
+    task.Priority = Console.ReadLine();
+    // ask user to input ticket Submitter
+    Console.WriteLine("Enter task submitter");
+    // input submitter
+    task.Submitter = Console.ReadLine();
+    // ask user to input ticket assigned
+    Console.WriteLine("Enter task assigned");
+    // input assigned
+    task.Assigned = Console.ReadLine();
+    string input;
+      do
+      {
+        // ask user to enter watching
+        Console.WriteLine("Enter watching (or done to quit)");
+        // input watching
+        input = Console.ReadLine();
+        // if user enters "done"
+        // or does not enter a genre do not add it to list
+        if (input != "done" && input.Length > 0)
+        {
+          task.Watching.Add(input);
+        }
+      } while (input != "done");
+      // specify if no watching are entered
+      if (task.Watching.Count == 0)
+      {
+        task.Watching.Add("(no genres listed)");
+      }
+      // ask user to input ticket project name
+      Console.WriteLine("Enter task Project Name");
+      // input project name
+      task.ProjectName = Console.ReadLine();
+      // ask user to input ticket due date
+      Console.WriteLine("Enter task Due Date");
+      // input due date
+      task.DueDate = Console.ReadLine();
+      // add movie
+      taskFile.AddTask(task);
+  } else if (choice == "6")
+  {
+    // Display All tasks
+    foreach(Task e in taskFile.Tasks)
+    {
+      Console.WriteLine(e.Display());
+    }
+  }
+} while (choice == "1" || choice == "2" || choice == "3" || choice == "4" || choice == "5" || choice == "6");
 
 logger.Info("Program ended");
